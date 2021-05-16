@@ -12,12 +12,13 @@ dateRegex = re.compile(r'''(
     (\d\.\d\d|\d\d)\%?              # Percent as a int or float
     )''', re.VERBOSE)               # re.VERBOSE so I can multiline and comment
 
-text = str(pyperclip.paste())
+txt = str(pyperclip.paste())
 
 times = []
 percents = []
 
-for groups in dateRegex.findall(text):
+# TODO: Normalize the float to an int
+for groups in dateRegex.findall(txt):
     times.append(groups[2])
     percents.append(float(groups[5]))
 
@@ -29,6 +30,6 @@ else:
     fig = px.line(
         x = times,
         y = percents,
-        labels = {'x':'times', 'y':'percent'}
+        labels = {'x':'time', 'y':'percent'}
     )
     fig.show()
