@@ -1,8 +1,13 @@
 #! Python3
-#Graph battery usage over time for iPHone and Android logs. 
+# Graph battery usage over time for iPhone and Android logs. 
+# Switching to Bokeh for visualizations 
+# https://docs.bokeh.org/en/latest/docs/first_steps/first_steps_1.html
 
-import re, pyperclip
-import plotly.express as px
+import re, pyperclip, time
+import time
+from bokeh.plotting import figure, show
+
+
 
 dateRegex = re.compile(r'''(
     (\d{4}-\d\d-\d\d)\s             # date
@@ -14,8 +19,8 @@ dateRegex = re.compile(r'''(
 
 txt = str(pyperclip.paste())
 
-times = []
-percents = []
+times = []                          # x coordinate
+percents = []                       # y coordinate
 
 # TODO: Normalize the float to an int
 for groups in dateRegex.findall(txt):
@@ -27,9 +32,6 @@ if times == [] or percents == []:
     exit
 else:
     print(f'{len(times)} matches found')
-    fig = px.line(
-        x = times,
-        y = percents,
-        labels = {'x':'time', 'y':'percent'}
-    )
-    fig.show()
+    p = figure(title="Simple Battery Graph", x_axis_label='time', y_axis_label='Percent')
+    p.line(times, percents, line_width=2)
+    show(p)
